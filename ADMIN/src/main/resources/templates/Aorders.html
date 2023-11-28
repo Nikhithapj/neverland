@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head th:fragment="head">
+    <meta charset="utf-8">
+    <title>Admin Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/imgs/theme/favicon.svg}">
+    <!-- Template CSS -->
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div class="screen-overlay"></div>
+<aside class="navbar-aside" id="offcanvas_aside">
+    <div class="aside-top">
+        <a th:href="@{/index}" class="brand-wrap">
+            <img th:src="@{/imgs/theme/logo.svg}" class="logo" alt="Evara Dashboard">
+        </a>
+        <div>
+            <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i>
+            </button>
+        </div>
+    </div>
+    <nav>
+        <aside th:replace="~{fragments::sidebar}"></aside>
+        <hr>
+        <br>
+        <br>
+    </nav>
+</aside>
+
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+                </div>
+                <div th:if="${success}" class="text-center alert"
+                     style="background-color: #00b09b; color: #fff; padding: 10px; border-radius: 8px; margin: 10px auto; max-width: 200px;">
+                    <p th:text="${success}"></p>
+                    <script>
+                        setTimeout(function () {
+                            document.querySelector('.alert').style.display = 'none';
+                        }, 3000); // Hide the message after 3 seconds (adjust as needed)
+                    </script>
+                </div>
+                <div th:if="${error}" class="text-center alert"
+                     style="background-color: #ff0000; color: #fff; padding: 10px; border-radius: 8px; margin: 10px auto; max-width: 200px;">
+                    <p th:text="${error}"></p>
+                    <script>
+                        setTimeout(function () {
+                            document.querySelector('.alert').style.display = 'none';
+                        }, 3000); // Hide the message after 3 seconds (adjust as needed)
+                    </script>
+                </div>
+                <datalist id="search_terms">
+                    <option value="Dresses & Frocks">
+                    <option value="Ethnic Wear">
+                    <option value="Party Wear">
+                    <option value="Nightwear">
+                    <option value="Skirts & Shorts">
+                </datalist>
+            </form>
+        </div>
+        <div class="col-nav">
+            <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i
+                    class="material-icons md-apps"></i></button>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link btn-icon" href="#">
+                        <i class="material-icons md-notifications animation-shake"></i>
+                        <span class="badge rounded-pill">3</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                </li>
+                <li><i class="fi-rs-user"></i><a th:href="@{/logout}" class="button">Logout</a></li>
+            </ul>
+        </div>
+    </header>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">order Management</h2>
+            </div>
+        </div>
+        </header>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Order No.</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Delivery Date</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Order Status</th>
+                <th scope="col">Total Price</th>
+                <th scope="col">Payment Method</th>
+                <th>Payment Status</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each = "order: ${orders}">
+                <th scope="row" th:text = "${order.id}"></th>
+                <th scope="row" th:text = "${order.orderDate}"></th>
+                <td th:text = "${order.deliveryDate}"></td>
+                <td>
+                    <span th:text="${order.customer.firstName}+' '+${order.customer.lastName}"></span>
+                </td>
+                <td>
+                    <select th:unless="${order.orderStatus=='Cancelled' or order.orderStatus=='Delivered' or order.orderStatus=='Returned' or order.orderStatus=='Pending'}" id="order-status" th:data-order-id="${order.id}" onchange="submitSelection(this.getAttribute('data-order-id'))" name="orderStatus" class="form-control">
+
+                        <option th:value="null">-Select-</option>
+
+                        <option th:if="${order.orderStatus == 'confirmed'}" value="Shipped">Shipped</option>
+                        <option th:if="${order.orderStatus == 'Shipped'}" value="Delivered">Delivered</option>
+                    </select>
+
+
+                    <p th:text = "${order.orderStatus}" style="color: darkred"></p>
+                </td>
+                <td th:text = "${order.totalPrice}" style="color: darkblue"></td>
+                <td th:text = "${order.paymentMethod}"></td>
+                <td th:text = "${order.paymentStatus}"></td>
+
+
+                <td>
+                    <a th:href="@{/order-view/{id}(id=${order.id})}" class="button-cancel">View</a>
+
+                    <a th:if="${order.orderStatus=='Pending'}" th:href="@{cancel-order/{id} (id=${order.id})}" onclick="if(!(confirm('Are you sure you want to Cancel this Order?'))) return false">Cancel</a>
+                    <a th:if="${order.orderStatus.equals('Pending')}" th:href="@{accept-order/{id} (id=${order.id})}" onclick="if(!(confirm('Are you sure you want to Accept this Order?'))) return false">Accept</a>
+                </td>
+
+            </tr>
+            </tbody>
+
+
+        </table>
+        </div>
+    </section>
+</main>
+<script th:src="@{/js/vendors/jquery-3.6.0.min.js}"></script>
+<script th:src="@{/js/vendors/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/vendors/select2.min.js}"></script>
+<script th:src="@{/js/vendors/perfect-scrollbar.js}"></script>
+<script th:src="@{/js/vendors/jquery.fullscreen.min.js}"></script>
+<!-- Main Script -->
+<script th:src="@{/js/main.js}" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script th:src="@{/js/categories.js}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-oP6HI5/wMkOiOi0tMz5R/ujfZkv4KplGjwhO8Hv8f/B6bU3qFqFiq4qijF8OVPm/4" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.js" integrity="sha512-8Z5++K1rB3U+USaLKG6oO8uWWBhdYsM3hmdirnOEWp8h2B1aOikj5zBzlXs8QOrvY9OxEnD2QDkbSKKpfqcIWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function() {
+        $('#orderTable').DataTable(
+            {
+                order: [
+                    [
+                        0, 'desc'
+                    ]
+                ]
+            }
+        );
+    });
+
+    // function submitSelection(orderId){
+    //     const select= document.getElementById("order-status").value;
+    //     window.location.href = "/admin/orders?status=" +select+"&orderId= "+orderId;
+    // }
+</script>
+<script>
+    function submitSelection(orderId) {
+        const select = document.getElementById("order-status").value;
+        console.log(select)
+        $.ajax({
+
+            url: "/admin/get-order-status/"+ orderId,
+            method: "GET",
+
+            success: function (currentStatus) {
+                console.log(currentStatus)
+                if (currentStatus === "Returned" && select === "Returned")
+                {
+                    alert("Order is already marked as Returned.");
+                    return; // Don't proceed with the update
+                }
+                // Continue with the update logic
+                window.location.href = "/admin/orders?status=" +select+"&orderId="+orderId;
+            },
+            error: function () {
+                alert("Failed to retrieve the current order status.");
+            }
+        });
+        console.log("end")
+    }
+</script>
+
+
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('#tableOrder').DataTable(-->
+<!--            {-->
+<!--                order: [-->
+<!--                    [-->
+<!--                        0, 'desc'-->
+<!--                    ]-->
+<!--                ]-->
+<!--            }-->
+<!--        );-->
+<!--    });-->
+
+
+<!--    function submitSelection(orderId){-->
+<!--        const select = document.getElementById("order-status").value;-->
+<!--        window.location.href = "/admin/orders?status="+ select + "&orderId=" + orderId;;-->
+<!--    }-->
+<!--</script>-->
+
+
+</body>
+</html>
+

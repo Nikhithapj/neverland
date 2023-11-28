@@ -1,0 +1,465 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th = "https://www.thymeleaf.org/">
+<head th:replace="~{fragments::head}">
+<body>
+<div class="screen-overlay"></div>
+<aside class="navbar-aside" id="offcanvas_aside">
+    <div class="aside-top">
+        <a href="index.html" class="brand-wrap">
+            <img th:src="@{/imgs/theme/logo.svg}" class="logo" alt="Evara Dashboard">
+        </a>
+        <div>
+            <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+        </div>
+    </div>
+    <nav>
+        <aside th:replace="~{fragments::sidebar}"></aside>
+        <hr>
+        <ul class="menu-aside">
+            <li class="menu-item has-submenu">
+                <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                    <span class="text">Settings</span>
+                </a>
+                <div class="submenu">
+                    <a href="page-settings-1.html">Setting sample 1</a>
+                    <a href="page-settings-2.html">Setting sample 2</a>
+                </div>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                    <span class="text"> Starter page </span>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <br>
+    </nav>
+</aside>
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                </div>
+                <datalist id="search_terms">
+                    <option value="Dresses & Frocks">
+                    <option value="Ethnic Wear">
+                    <option value="Party Wear">
+                    <option value="Nightwear">
+                    <option value="Skirts & Shorts">
+                </datalist>
+            </form>
+        </div>
+        <div class="col-nav">
+            <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link btn-icon" href="#">
+                        <i class="material-icons md-notifications animation-shake"></i>
+                        <span class="badge rounded-pill">3</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                </li>
+
+                <li class="dropdown nav-item">
+                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="assets/imgs/people/avatar2.jpg" alt="User"></a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                        <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
+                        <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
+                        <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                        <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
+                        <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <section class="content-main">
+        <div class="row">
+            <div class="col-6">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Product</h2>
+                    <div>
+<!--                        <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>-->
+<!--                        <button class="btn btn-md rounded font-sm hover-up">Publich</button>-->
+                        <button id="submitButton" class="btn btn-md rounded font-sm hover-up">Publich</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div th:text="${error}"></div>
+            <form id="myForm" th:action="@{/save-product}" method="post" th:object = "${productDto}"
+                  enctype="multipart/form-data">
+                <fieldset>
+                    <!-- Form Name -->
+                    <legend>ADD NEW PRODUCT</legend>
+                    <!-- Text input-->
+<!--                    <div class="form-group">-->
+<!--                        <label class="col-md-4 control-label" for="product_name">PRODUCT NAME</label>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <input id="product_name" th:field = "*{name}" name="product_name" class="form-control input-md" required="required" type="text">-->
+<!--                        </div>-->
+                    <!--                    </div>-->
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="product_name">PRODUCT NAME</label>
+                        <div class="col-md-4">
+                            <input id="product_name" th:field="*{name}" name="product_name" class="form-control input-md"  type="text">
+<!--                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></span>-->
+                            <div class="error text-danger ms-2"></div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Select Basic -->
+<!--                    <div class="form-group">-->
+<!--                        <label class="col-md-4 control-label" for="product_categories">PRODUCT CATEGORY</label>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <select id="product_categories" th:field = "*{category}" name="product_categories" class="form-control" required="" type="text">-->
+<!--                                <option th:value = "null">-SELECT-</option>-->
+<!--                                <option th:each = "category : ${categories}"-->
+<!--                                        th:value = "${category.id}"-->
+<!--                                        th:text = "${category.name}">-->
+<!--                                </option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="product_categories">PRODUCT CATEGORY</label>
+                        <div class="col-md-4">
+                            <select id="product_categories" th:field="*{category}" name="product_categories" class="form-control"  type="text">
+                                <option th:value="null">-SELECT-</option>
+                                <option th:each="category : ${categories}"
+                                        th:value="${category.id}"
+                                        th:text="${category.name}">
+
+                                </option>
+                            </select>
+                            <span th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="error"></span>
+                        </div>
+                    </div>
+
+
+                    <!-- Text input-->
+<!--                    <div class="form-group">-->
+<!--                        <label class="col-md-4 control-label" for="description">PRODUCT DESCRIPTION</label>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <input id="description" th:field = "*{description}" name="description" class="form-control input-md" required="" type="text">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="description">PRODUCT DESCRIPTION</label>
+                        <div class="col-md-4">
+                            <input id="description" th:field="*{description}" name="description" class="form-control input-md"  type="text">
+                            <div class="error text-danger ms-2"></div>
+
+<!--                            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error"></span>-->
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- Text input-->
+<!--                    <div class="form-group">-->
+<!--                        <label class="col-md-4 control-label" for="available_quantity">AVAILABLE QUANTITY</label>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <input id="available_quantity" th:field = "*{currentQuantity}" name="available_quantity" class="form-control input-md" required="" type="text">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="available_quantity">AVAILABLE QUANTITY</label>
+                        <div class="col-md-4">
+                            <input id="available_quantity" th:field="*{currentQuantity}" name="available_quantity" class="form-control input-md"  type="text">
+                            <div class="error text-danger ms-2"></div>
+
+<!--                            <span th:if="${#fields.hasErrors('currentQuantity')}" th:errors="*{currentQuantity}" class="error"></span>-->
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- Text input-->
+<!--                    <div class="form-group">-->
+<!--                        <label class="col-md-4 control-label" for="price">PRICE</label>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <input id="price" name="price" th:field = "*{costPrice}" class="form-control input-md" required="" type="text">-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="price">PRICE</label>
+                        <div class="col-md-4">
+                            <input id="price" th:field="*{costPrice}" name="price" class="form-control input-md"  type="text">
+                            <div class="error text-danger ms-2"></div>
+
+<!--                            <span th:if="${#fields.hasErrors('costPrice')}" th:errors="*{costPrice}" class="error"></span>-->
+                        </div>
+                    </div>
+
+
+
+
+<!--code used before image cropping-->
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="col-md-9">
+                                <div class="mb-4">
+                                    <label class="form-label">Images</label>
+                                    <input class="form-control p-0" name="imageProduct" type="file" accept="image/png, image/gif, image/jpeg" multiple />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+<!--the code which uses image cropping-->
+
+<!--                    <div class="form-group">-->
+<!--                        <div class="col-md-4">-->
+<!--                            <div class="col-md-9">-->
+<!--                                <div class="mb-4">-->
+<!--                                    <label class="form-label">Images</label>-->
+<!--                                    <input class="form-control p-0" name="imageProduct" type="file" accept="image/png, image/gif, image/jpeg" multiple id="imageInput" />-->
+<!--                                </div>-->
+<!--                                <div class="mb-4">-->
+<!--                                    <button class="btn btn-primary" id="cropButton">Crop and Upload</button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+                    <!-- Display validation error for imageProduct field -->
+<!--                    <div th:if="${#fields.hasErrors('imageProduct')}" class="alert alert-danger">-->
+<!--                        <p th:each="error : ${#fields.errors('imageProduct')}" th:text="${error}"></p>-->
+<!--                    </div>-->
+
+
+
+
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                </fieldset>
+            </form>
+        </div>
+
+
+    </section> <!-- content-main end// -->
+    <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+            <div class="col-sm-6">
+                <script>
+                    document.write(new Date().getFullYear())
+                </script>  All rights reserved.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end">
+
+                </div>
+            </div>
+        </div>
+    </footer>
+</main>
+<script th:src="@{/js/vendors/jquery-3.6.0.min.js}"></script>
+<script th:src="@{/js/vendors/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/vendors/select2.min.js}"></script>
+<script th:src="@{/js/vendors/perfect-scrollbar.js}"></script>
+<script th:src="@{/js/vendors/jquery.fullscreen.min.js}"></script>
+<!-- Main Script -->
+<script th:src="@{/js/main.js}" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Include Cropper.js from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/cropperjs"></script>
+
+
+
+
+
+
+<script>
+    // document.getElementById("submitButton").addEventListener("click", function() {
+    //     // Trigger the form submission when the button is clicked
+    //     document.getElementById("myForm").submit();
+    // });
+
+</script>
+
+<script>
+    const form = document.getElementById('myForm');
+    const productName = document.getElementById('product_name');
+    const description = document.getElementById('description');
+    const quantity = document.getElementById('available_quantity');
+    const price = document.getElementById('price');
+
+
+    const setError = (element, message, e) => {
+        console.log(element)
+        e.preventDefault();
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('.error');
+
+        errorDisplay.innerText = message;
+        inputControl.classList.add('error');
+        inputControl.classList.remove('success');
+    };
+    const setSuccess = element => {
+        console.log(element)
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector('.error');
+        errorDisplay.innerText = '';
+        inputControl.classList.add('success');
+        inputControl.classList.remove('error');
+    };
+
+
+    function validateInputs(e) {
+        setSuccess(productName);
+        setSuccess(description);
+        setSuccess(quantity);
+        setSuccess(price);
+
+
+        const productNameValue = productName.value.trim();
+        const descriptionValue = description.value.trim();
+        const quantityValue = quantity.value.trim();
+        const priceValue = price.value.trim();
+
+        if(productNameValue === '') {
+            setError(productName, 'Please enter Product name', e);
+            productName.focus();
+            return false;
+        }
+        else{
+            setSuccess(productName);
+        }
+        if(descriptionValue === '') {
+            setError(description, 'Please enter Description', e);
+            description.focus();
+            return false;
+        }
+        else{
+            setSuccess(description);
+        }
+
+        if(quantityValue === '') {
+            setError(quantity, 'Please enter Quantity', e);
+            quantity.focus();
+            return false;
+        }
+        else{
+            setSuccess(quantity);
+        }
+
+
+        if(priceValue === ""){
+            setError(price, 'Enter Price', e);
+            price.focus();
+            return false;
+        }
+        else{
+            setSuccess(price);
+        }
+
+        return true;
+    }
+
+    form.addEventListener('submit', function(e) {
+
+        console.log("form submitted")
+        if(validateInputs(e)){
+            console.log("VALIDATION Success");
+        }
+    })
+
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const form = document.getElementById('myForm');
+    //     const productName = document.getElementById('product_name');
+    //     const productCategory = document.getElementById('product_categories');
+    //     const productDescription = document.getElementById('description');
+    //     const availableQuantity = document.getElementById('available_quantity');
+    //     const price = document.getElementById('price');
+    //     const imageInput = document.querySelector('input[name="imageProduct"]');
+    //
+    //     form.addEventListener('submit', function(event) {
+    //         let isValid = true;
+    //
+    //         // Reset previous error messages
+    //         const errorElements = document.querySelectorAll('.error');
+    //         errorElements.forEach(element => {
+    //             element.textContent = '';
+    //         });
+    //
+    //         // Validate PRODUCT NAME
+    //         if (productName.value.trim() === '') {
+    //             isValid = false;
+    //             displayError(productName, 'Product name cannot be empty');
+    //         }
+    //
+    //         // Validate PRODUCT CATEGORY
+    //         if (productCategory.value === 'null') {
+    //             isValid = false;
+    //             displayError(productCategory, 'Please select a product category');
+    //         }
+    //
+    //         // Validate PRODUCT DESCRIPTION
+    //         if (productDescription.value.trim() === '') {
+    //             isValid = false;
+    //             displayError(productDescription, 'Product description cannot be empty');
+    //         }
+    //
+    //         // Validate AVAILABLE QUANTITY
+    //         if (availableQuantity.value.trim() === '') {
+    //             isValid = false;
+    //             displayError(availableQuantity, 'Available quantity cannot be empty');
+    //         }
+    //
+    //         // Validate PRICE
+    //         if (price.value.trim() === '') {
+    //             isValid = false;
+    //             displayError(price, 'Price cannot be empty');
+    //         }
+    //
+    //         // Validate IMAGES
+    //         if (imageInput.files.length === 0) {
+    //             isValid = false;
+    //             displayError(imageInput, 'Images cannot be empty');
+    //         }
+    //
+    //         // If the form is not valid, prevent submission
+    //         if (!isValid) {
+    //             event.preventDefault();
+    //         }
+    //     });
+    //
+    //     function displayError(element, errorMessage) {
+    //         const errorElement = document.createElement('span');
+    //         errorElement.className = 'error';
+    //         errorElement.textContent = errorMessage;
+    //         element.parentNode.appendChild(errorElement);
+    //     }
+    // });
+</script>
+
+</body>
+
+</html>

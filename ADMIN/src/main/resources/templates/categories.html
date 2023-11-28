@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="~{fragments::head}">
+    <title></title>
+</head>
+
+<body id="page-top">
+<!--Sidebar-->
+<aside th:replace="~{fragments::sidebar}"></aside>
+<!-- End of Sidebar -->
+
+<!-- Page Wrapper -->
+<main class="main-wrap">
+    <div id="wrapper">
+        <!-- Topbar -->
+        <header th:replace="~{fragments::topbar}"></header>
+        <!-- End of Topbar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Begin Page Content -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#exampleAddCategoryModal"
+                        data-whatever="@mdo">Add new category
+                </button>
+                <p th:if="${size == 0}">No category</p>
+                <div th:if="${success}" class="text-center alert alert-success">
+                    <p th:text="${success}">
+                    </p>
+                </div>
+                <div th:if="${error}" class="text-center alert alert-danger">
+                    <p th:text="${error}"></p>
+                </div>
+
+                <table class="table table-striped" th:if="${size > 0}">
+                    <thead>
+                    <tr>
+                        <th scope="col">Category Index</th>
+                        <th scope="col">Category Name</th>
+                        <th scope="col">Update Name</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="category : ${categories}">
+                        <th scope="row" th:text="${category.id}"></th>
+                        <td th:text="${category.name}"></td>
+                        <td>
+                            <a id="editButton" data-bs-toggle="modal" data-bs-target="#editModal"
+                               th:href="@{/findById/{id}(id = ${category.id})}"
+                               class="btn btn-primary">Update</a>
+                        </td>
+                        <td>
+                            <a th:if="${category.deleted} == true" th:href="@{/enable-category/{id}(id = ${category.id})}"
+                               class="btn" style="background-color: limegreen; border-radius: 10px"
+                               onclick="if (!(confirm('Are you sure you want to unblock the customer?'))) return false">Enable</a>
+                            <a th:if="${category.deleted} == false" th:href="@{/delete-category/{id}(id = ${category.id})}"
+                               class="btn" style="background-color: red"onclick="if (!(confirm('Are you sure you want to unblock the customer?'))) return false">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <!-- End of Content Wrapper -->
+
+        </div>
+    </div>
+
+    <!--Add Categories Modal-->
+    <div class="modal fade" id="exampleAddCategoryModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleAddCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleAddCategoryModalLabel">New Category</h5>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/save-category}" method="post" onsubmit="return validateeForm()">
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Category Name:</label>
+                            <input type="text" class="form-control" id="name" name="name">
+                            <small id="nameError" class="text-danger"></small>
+                            </small>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End-->
+    <!-- Edit Category Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit category</h5>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/update-category}" method="post" onsubmit="return validateForm()">
+                        <div class="form-group"  >
+                            <label for="idEdit" class="col-form-label">ID
+                            </label>
+                            <input type="text" class="form-control" id="idEdit" name="id" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="nameEdit" class="col-form-label">Category
+                                Name</label>
+                            <input type="text" class="form-control" id="nameEdit" name="name">
+                        </div>
+                        <div id="error-message" style="color: #992b2b;"></div>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<!-- End -->
+<!-- Bootstrap core JavaScript-->
+<div th:replace="~{fragments::script}"></div>
+<script>
+    function validateForm() {
+        var categoryName = document.getElementById("nameEdit").value;
+        var specialChars = /^[a-zA-Z\s]+$/;
+        var errorMessageElement = document.getElementById("error-message");
+        var name = categoryName.trim();
+        if (!specialChars.test(categoryName)) {
+            errorMessageElement.innerHTML = "Special characters and numbers are not allowed in Category Name.";
+            return false;
+        }
+        if (name==="") {
+            errorMessageElement.innerHTML = "Name cannot be blank";
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
+<!--<script th:src="@{/js/categories.js}"></script>-->
+<script>
+    $(document).ready(function() {
+        $('table #editButton').on('click', function (event) {
+            console.log("button clicked");
+            event.preventDefault();
+            const href = $(this).attr('href');
+            $.get(href, function (category, status) {
+                $('#idEdit').val(category.id);
+                $('#nameEdit').val(category.name);
+            });
+            $('#editModal').modal();
+        });
+    });
+
+</script>
+
+<script>
+    function validateeForm() {
+        // Get the input field value
+        var nameInput = document.getElementById("name");
+        var name = nameInput.value.trim();
+
+        // Get the error message element
+        var nameError = document.getElementById("nameError");
+
+        // Reset previous error messages
+        nameError.innerHTML = "";
+
+        // Validate the name field
+        if (name === "") {
+            nameError.innerHTML = "Name cannot be blank";
+            return false; // Prevent form submission
+        }
+
+        // Use a regular expression to validate the name format (letters and spaces)
+        var namePattern = /^[a-zA-Z\s]+$/;
+        if (!namePattern.test(name)) {
+            nameError.innerHTML = "Name can only contain letters and spaces";
+            return false; // Prevent form submission
+        }
+
+        // If validation passes, allow the form to be submitted
+        return true;
+    }
+</script>
+<!--<script>-->
+<!--    // Function to validate the form-->
+<!--    function validateForm(event) {-->
+<!--        var firstName = document.querySelector('input[name="firstName"]').value;-->
+<!--        var lastName = document.querySelector('input[name="lastName"]').value;-->
+<!--        var username = document.querySelector('input[name="username"]').value;-->
+<!--        var phoneNumber = document.querySelector('input[name="phoneNumber"]').value;-->
+<!--        var password = document.querySelector('input[name="password"]').value;-->
+<!--        var confirmPassword = document.querySelector('input[name="confirm"]').value;-->
+<!--        var checkBox = document.querySelector('input[name="checkbox"]').checked;-->
+
+<!--        // Reset error messages-->
+<!--        var errorMessages = document.querySelectorAll('.alert.alert-danger');-->
+<!--        errorMessages.forEach(function (element) {-->
+<!--            element.textContent = '';-->
+<!--        });-->
+
+<!--        // Validation logic-->
+<!--        var hasError = false;-->
+
+<!--        if (firstName.trim() === '') {-->
+<!--            document.querySelector('.alert.alert-danger.firstName').textContent = 'First Name is required.';-->
+<!--            hasError = true;-->
+<!--        }-->
+
+<!--        if (lastName.trim() === '') {-->
+<!--            document.querySelector('.alert.alert-danger.lastName').textContent = 'Last Name is required.';-->
+<!--            hasError = true;-->
+<!--        }-->
+
+<!--        if (username.trim() === '') {-->
+<!--            document.querySelector('.alert.alert-danger.username').textContent = 'Email is required.';-->
+<!--            hasError = true;-->
+<!--        } else if (!validateEmail(username)) {-->
+<!--            document.querySelector('.alert.alert-danger.username').textContent = 'Invalid email format.';-->
+<!--            hasError = true;-->
+<!--        }-->
+
+<!--        if (phoneNumber.trim() === '') {-->
+<!--            document.querySelector('.alert.alert-danger.phoneNumber').textContent = 'Mobile Number is required.';-->
+<!--            hasError = true;-->
+<!--        }-->
+
+<!--        if (password.trim() === '') {-->
+<!--            document.querySelector('.alert.alert-danger.password').textContent = 'Password is required.';-->
+<!--            hasError = true;-->
+<!--        } else if (password !== confirmPassword) {-->
+<!--            document.querySelector('.alert.alert-danger.confirmPassword').textContent = 'Passwords do not match.';-->
+<!--            hasError = true;-->
+<!--        }-->
+
+<!--        if (!checkBox) {-->
+<!--            document.querySelector('.alert.alert-danger.checkbox').textContent = 'You must agree to the terms & Policy.';-->
+<!--            hasError = true;-->
+<!--        }-->
+
+<!--        if (hasError) {-->
+<!--            event.preventDefault(); // Prevent form submission-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Email validation function-->
+<!--    function validateEmail(email) {-->
+<!--        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;-->
+<!--        return emailRegex.test(email);-->
+<!--    }-->
+
+<!--    // Add event listener to the form-->
+<!--    var form = document.querySelector('form');-->
+<!--    form.addEventListener('submit', validateForm);-->
+<!--</script>-->
+
+</body>
+
+</html>

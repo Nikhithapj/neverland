@@ -1,0 +1,213 @@
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+
+<head th:fragment="head">
+    <meta charset="utf-8">
+    <title>Admin Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{/imgs/theme/favicon.svg}">
+    <!-- Template CSS -->
+    <link th:href="@{/css/main.css}" rel="stylesheet" type="text/css"/>
+
+    <!--    <style>-->
+    <!--        .image-container {-->
+    <!--            width: 300px; /* Set the desired width of the container */-->
+    <!--            height: 200px; /* Set the desired height of the container */-->
+    <!--            overflow: hidden; /* Hide overflowing content */-->
+    <!--        }-->
+
+    <!--        .zoomed-image {-->
+    <!--            width: 100%; /* Set the image width to 100% to fill the container */-->
+    <!--            height: auto; /* Automatically adjust the image height */-->
+    <!--            transform: scale(1); /* Initial zoom level (1 = 100%) */-->
+    <!--            transition: transform 0.3s ease; /* Add a smooth transition effect */-->
+    <!--        }-->
+
+    <!--        /* Hover effect for zooming */-->
+    <!--        .image-container:hover .zoomed-image {-->
+    <!--            transform: scale(1.2); /* Increase the zoom level on hover (1.2 = 120%) */-->
+    <!--        }-->
+    <!--    </style>-->
+</head>
+<body>
+<div class="screen-overlay"></div>
+<aside class="navbar-aside" id="offcanvas_aside">
+    <div class="aside-top">
+        <a th:href="@{/index}" class="brand-wrap">
+            <img th:src="@{/imgs/theme/logo.svg}" class="logo" alt="Evara Dashboard">
+        </a>
+        <div>
+            <button class="btn btn-icon btn-aside-minimize"><i class="text-muted material-icons md-menu_open"></i>
+            </button>
+        </div>
+    </div>
+    <nav>
+        <aside th:replace="~{fragments::sidebar}"></aside>
+        <hr>
+        <br>
+        <br>
+    </nav>
+</aside>
+
+<main class="main-wrap">
+    <header class="main-header navbar">
+        <div class="col-search">
+            <form class="searchform">
+                <div class="input-group">
+                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                    <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
+                </div>
+                <div th:if="${success}" class="text-center alert"
+                     style="background-color: #00b09b; color: #fff; padding: 10px; border-radius: 8px; margin: 10px auto; max-width: 200px;">
+                    <p th:text="${success}"></p>
+                    <script>
+                        setTimeout(function () {
+                            document.querySelector('.alert').style.display = 'none';
+                        }, 3000); // Hide the message after 3 seconds (adjust as needed)
+                    </script>
+                </div>
+                <div th:if="${error}" class="text-center alert"
+                     style="background-color: #ff0000; color: #fff; padding: 10px; border-radius: 8px; margin: 10px auto; max-width: 200px;">
+                    <p th:text="${error}"></p>
+                    <script>
+                        setTimeout(function () {
+                            document.querySelector('.alert').style.display = 'none';
+                        }, 3000); // Hide the message after 3 seconds (adjust as needed)
+                    </script>
+                </div>
+                <datalist id="search_terms">
+                    <option value="Dresses & Frocks">
+                    <option value="Ethnic Wear">
+                    <option value="Party Wear">
+                    <option value="Nightwear">
+                    <option value="Skirts & Shorts">
+                </datalist>
+            </form>
+        </div>
+        <div class="col-nav">
+            <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"><i
+                    class="material-icons md-apps"></i></button>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link btn-icon" href="#">
+                        <i class="material-icons md-notifications animation-shake"></i>
+                        <span class="badge rounded-pill">3</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                </li>
+                <li><i class="fi-rs-user"></i><a th:href="@{/logout}" class="button">Logout</a></li>
+                <!--                <li class="dropdown nav-item">-->
+                <!--                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"-->
+                <!--                       aria-expanded="false"> <img class="img-xs rounded-circle" th:src="@{/imgs/people/avatar2.jpg}"-->
+                <!--                                                   alt="User"></a>-->
+                <!--                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">-->
+                <!--                        <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit-->
+                <!--                            Profile</a>-->
+                <!--                        <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>-->
+                <!--                        <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>-->
+                <!--                        <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>-->
+                <!--                        <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>-->
+                <!--                        <div class="dropdown-divider"></div>-->
+                <!--                        <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>-->
+                <!--                    </div>-->
+                <!--                </li>-->
+
+            </ul>
+        </div>
+    </header>
+    <br>
+    <!-- Page Heading -->
+    <div th:if = "${size == 0}">
+        <p>No Offers</p>
+    </div>
+    <div th:if = "${success}" class="text-center alert alert-success">
+        <p th:text = "${success}"></p>
+    </div>
+    <div th:if = "${error}" class="text-center alert alert-danger">
+        <p th:text = "${error}"></p>
+    </div>
+    <a class="btn btn-primary" th:href="@{/offers/add-offer}">Add new Offer</a>
+    <!--Just Some space-->
+    <div class="mb-3"></div>
+
+
+    <table id="offersTable" class="table table-bordered" th:if = "${size > 0}">
+        <thead>
+        <tr>
+            <th scope="col">Offer Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Discount %</th>
+            <th scope="col">Offer For</th>
+            <th scope="col">Offer Applied On</th>
+            <th scope="col">Update</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each = "offer : ${offers}">
+            <td th:text = "${offer.name}"></td>
+            <td th:text = "${offer.description}"></td>
+            <td th:text = "${offer.offPercentage}"></td>
+            <td th:text = "${offer.offerType}" style="font-weight: bold; color: #655d5d;" ></td>
+            <td >
+                <span th:if="${offer.offerProductId != null}" th:text = "${offer.applicableForProductName}"></span>
+                <span th:if="${offer.offerCategoryId != null}" th:text = "${offer.applicableForCategoryName}"></span>
+            </td>
+            <td><a th:href="@{/offers/update-offer/{id}(id= ${offer.id})}" class="btn btn-xs btn-primary">Update</a></td>
+            <td>
+                <a th:if="${offer.enabled} == true" th:href="@{/disable-offer/{id}(id = ${offer.id})}"
+                   class="btn btn-xs btn-danger" onclick="if (!(confirm('Are you sure you want to Disable this coupon?'))) return false">Disable</a>
+                <a th:if="${offer.enabled} == false" onclick="if (!(confirm('Are you sure you want to Enable this coupon?'))) return false" th:href="@{/enable-offer/{id}(id = ${offer.id})}"
+                   class=" btn btn-xs btn-primary">Enable</a>
+                <a  th:href="@{/delete-offer/{id}(id = ${offer.id})}"
+                    class=" btn btn-xs btn-danger-" onclick="if (!(confirm('Are you sure you want to Delete this coupon?'))) return false">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    </section>
+</main>
+    </div>
+    <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+<script>
+    $(document).ready(function() {
+        $('#offersTable').DataTable();
+    });
+</script>
+    <!-- Footer --><script src="/admin/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin/js/vendors/select2.min.js"></script>
+    <script src="/admin/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/admin/js/vendors/chart.js"></script>
+    <!-- Main Script -->
+    <script src="/admin/js/main.js" type="text/javascript"></script>
+    <script src="/admin/js/custom-chart.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js" integrity="sha512-OQlawZneA7zzfI6B1n1tjUuo3C5mtYuAWpQdg+iI9mkDoo7iFzTqnQHf+K5ThOWNJ9AbXL4+ZDwH7ykySPQc+A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--
+
+-->
+
+</body>
+
+</html>
