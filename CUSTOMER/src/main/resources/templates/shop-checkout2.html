@@ -46,13 +46,26 @@
               <h5 class="mb-0">
               </h5>
 
+<!--              <div class="form-check mb-0">-->
+<!--                <input class="form-check-input selectCheckBox" type="radio" th:value="${address.id}" th:id="'selectCheckBox' + ${address.id}" name="addressRadioGroup">-->
+<!--                <label class="form-check-label" th:for="'selectCheckBox' + ${address.id}"></label>-->
+<!--              </div>-->
+<!--for default address-->
+
+
+
               <div class="form-check mb-0">
-                <input class="form-check-input selectCheckBox" type="radio" th:value="${address.id}" th:id="'selectCheckBox' + ${address.id}" name="addressRadioGroup">
+                <input class="form-check-input selectCheckBox"
+                       type="radio"
+                       th:value="${address.id}"
+                       th:id="'selectCheckBox' + ${address.id}"
+                       name="addressRadioGroup"
+                       th:checked="${address._default}"> <!-- Set checked attribute based on default status -->
                 <label class="form-check-label" th:for="'selectCheckBox' + ${address.id}"></label>
               </div>
 
 
-<!--              <div class="form-check mb-0">-->
+              <!--              <div class="form-check mb-0">-->
 <!--                <input class="form-check-input selectCheckBox" type="radio" th:value="${address.id}" th:id="'selectCheckBox' + ${address.id}" name="addressRadioGroup" th:checked="${address.defaultAddress}">-->
 <!--                <label class="form-check-label" th:for="'selectCheckBox' + ${address.id}"></label>-->
 <!--              </div>-->
@@ -187,9 +200,14 @@
 
     </div>
     <div class="toggle_info mt-20">
+      <div th:if="${minOrderAmount}" class="alert alert-warning" role="alert">
+
+        <p th:text="${minOrderAmount}"></p>
+      </div>
       <span><i class="fi-rs-label mr-10"></i><span class="text-muted">Have a coupon?</span> <a href="#coupon" data-bs-toggle="collapse" class="collapsed" aria-expanded="false">Click here to enter your code</a></span>
     </div>
     <div class="panel-collapse collapse coupon_form" id="coupon">
+
       <div class="panel-body">
         <p class="mb-30 font-sm">If you have a coupon code, please apply it below.</p>
         <form method="post" th:action="@{/check-out/apply-coupon}">
@@ -197,10 +215,25 @@
             <input type="text" th:value="${param.couponCode}" placeholder="Enter Coupon Code..." name="couponCode">
           </div>
           <div class="form-group">
+
             <button class="btn  btn-md" type="submit" name="action" th:value="${param.couponCode == null ? 'apply' : 'remove'}" th:text="${param.couponCode == null ? 'Apply Coupon' : 'Remove Coupon'}"></button>
           </div>
         </form>
+
+
       </div>
+
+
+      <p th:text="${param.couponCode}"></p>
+
+
+      <form method="post" th:if="${param.couponCode != null}" th:action="@{/check-out/remove-coupon}">
+        <input type="hidden" name="action" value="remove">
+        <button class="btn btn-md btn-danger" type="submit">Remove Coupon</button>
+      </form>
+
+
+
     </div>
     <div class="mt-25" th:each="coupon : ${coupons}" style="border: 1px solid #ccc; padding: 10px; margin: 10px;">
       <p th:text="${coupon.description}"></p>

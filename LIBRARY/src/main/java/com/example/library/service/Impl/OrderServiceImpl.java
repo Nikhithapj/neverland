@@ -183,6 +183,12 @@ public class OrderServiceImpl implements OrderService {
           }
     }
 
+//    @Override
+//    public Double getTotalOrderAmount() {
+//        return orderRepository.getTotalConfirmedOrdersAmount();
+//
+//    }
+
 }
 
 

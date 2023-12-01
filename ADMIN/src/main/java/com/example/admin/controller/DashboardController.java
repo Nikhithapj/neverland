@@ -9,18 +9,19 @@ import com.example.library.service.DashBoardService;
 import com.example.library.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
+import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,13 +32,16 @@ public class DashboardController {
     private final DashBoardService dashBoardService;
     private final ProductService productService;
 
-    public DashboardController(DashBoardService dashBoardService,ProductService productService) {
+    public DashboardController(DashBoardService dashBoardService,ProductService productService  ) {
         this.dashBoardService = dashBoardService;
         this.productService=productService;
     }
 
     @RequestMapping(value={"/index","/"})
-    public String home(Model model, Principal principal) throws JsonProcessingException {
+    public String home(Model model, Principal principal, HttpSession session,
+                       @RequestParam(name = "filter", required = false, defaultValue = "") String filter,
+                       @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+                       @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) throws JsonProcessingException {
         if (principal == null) {
             return "redirect:/login";
         }
@@ -51,8 +55,8 @@ public class DashboardController {
         YearMonth currentYear=YearMonth.now();
         LocalDate localStartDate = LocalDate.of(currentYear.getYear(), currentYear.getMonthValue(), 1);
         LocalDate localEndDate = currentYear.atEndOfMonth();
-        Date startDate = java.sql.Date.valueOf(localStartDate);
-        Date endDate = java.sql.Date.valueOf(localEndDate);
+         startDate = java.sql.Date.valueOf(localStartDate);
+         endDate = java.sql.Date.valueOf(localEndDate);
         double currentMonthEarning=dashBoardService.findCurrentMonthOrder(startDate,endDate);
         Month currentMonth=currentYear.getMonth();
         model.addAttribute("currentMonth",currentMonth);
@@ -123,6 +127,77 @@ public class DashboardController {
         List<Object[]> totalQuantityPerProduct=productService.getTotalQuantityPerProduct();
         model.addAttribute("totalQuantityPerProduct",totalQuantityPerProduct);
 
+
+
+
+        String period;
+        switch (filter) {
+            case "week" -> {
+                period = "week";
+                // Get the starting date of the current week
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+                startDate = calendar.getTime();
+                // Get today's date
+                endDate = new Date();
+            }
+            case "month" -> {
+                period = "month";
+                // Get the starting date of the current month
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                startDate = calendar.getTime();
+                //Get today's Date
+                endDate = new Date();
+            }
+            case "day" -> {
+                period = "day";
+                // Get today's date
+                LocalDate today = LocalDate.now();
+                // Set the start date to 12:00:00 AM
+                LocalDateTime startDateTime = today.atStartOfDay();
+                // Set the end date to 11:59:59 PM
+                LocalDateTime endDateTime = today.atTime(23, 59, 59);
+                // Convert to Date objects
+                ZoneId zone = ZoneId.systemDefault();
+                startDate = Date.from(startDateTime.atZone(zone).toInstant());
+                endDate = Date.from(endDateTime.atZone(zone).toInstant());
+            }
+            case "year" -> {
+                period= "year";
+                // Get the starting date of the current year
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.DAY_OF_YEAR, 1);
+                startDate = calendar.getTime();
+                // Get today's date
+                endDate = new Date();
+            }
+            default -> {
+                // Default case: filter
+                period="";
+                filter="";
+
+            }
+        }
+        if (filter!="") {
+            List<Object[]>productStats = productService.getProductsStatsBetweenDates(startDate,endDate);
+            model.addAttribute("productStats",productStats);
+        } else {
+            List<Object[]>productStats = productService.getProductStats();
+            model.addAttribute("productStats",productStats);
+        }
+//        Double totalAmount = orderService.getTotalOrderAmount();
+//        model.addAttribute("period", period);
+//        Long totalProducts = productService.countAllProducts();
+//        Long totalCategory = categoryService.countAllCategories();
+//        Long totallOrders = orderService.countTotalConfirmedOrders();
+//        Double monthlyRevenue = orderService.getTotalAmountForMonth();
+//        model.addAttribute("TotalAmount",totalAmount);
+//        model.addAttribute("TotalProducts",totalProducts);
+//        model.addAttribute("TotalCategory",totalCategory);
+//        model.addAttribute("TotalOrders",totalOrders);
+//        model.addAttribute("MonthlyRevenue",monthlyRevenue);
+//        session.setAttribute("userLoggedIn", true);
 
 
         return "index";

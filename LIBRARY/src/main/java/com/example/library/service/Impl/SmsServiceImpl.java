@@ -14,11 +14,11 @@ import java.util.Random;
 @Service
 public class SmsServiceImpl implements SmsService {
 
-    private TwilioConfig twilioConfig;
-
-    public SmsServiceImpl(TwilioConfig twilioConfig) {
-        this.twilioConfig = twilioConfig;
-    }
+//    private TwilioConfig twilioConfig;
+//
+//    public SmsServiceImpl(TwilioConfig twilioConfig) {
+//        this.twilioConfig = twilioConfig;
+//    }
     @Override
     public String generateOtp() {
         return new DecimalFormat("000000")
@@ -28,7 +28,7 @@ public class SmsServiceImpl implements SmsService {
 //    @Override
 //    public void sendOtp(String otp) {
 //        try {
-//            PhoneNumber to = new PhoneNumber("+918921164620+");//to
+//            PhoneNumber to = new PhoneNumber("+918921164620");//to
 //            PhoneNumber from = new PhoneNumber(twilioConfig.getPhoneNumber()); // from
 //            String otpMessage = "Dear Customer , Your OTP is  " + otp + " for sending sms through Spring boot application. Thank You.";
 //            Message message = Message
@@ -60,16 +60,6 @@ public class SmsServiceImpl implements SmsService {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

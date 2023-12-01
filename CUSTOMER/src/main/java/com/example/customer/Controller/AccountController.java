@@ -94,18 +94,15 @@ public class AccountController {
 
     @PostMapping("/save-address")
     public String saveAddress(Model model, Principal principal, @ModelAttribute("addressdto") AddressDto addressDto,
+                              @RequestParam(value = "checkout", required = false) String checkout,
                               RedirectAttributes redirectAttributes) {
         if (principal == null)
         {
             return "redirect:/login";
         }
-        if (redirectAttributes.getFlashAttributes().containsKey("redirectToCheckout")) {
-            System.out.println("redirectToCheckout: " + redirectAttributes.getFlashAttributes().containsKey("redirectToCheckout"));
 
-            // Add address to customer object or update customer's address
-            // Redirect back to the checkout page
-            return "redirect:/shop-checkout";
-        }
+
+
         String username = principal.getName();
         Address newAddress = new Address();
         newAddress = addressService.save(addressDto, username);
@@ -118,6 +115,9 @@ public class AccountController {
         }
         model.addAttribute("address", newAddress);
         redirectAttributes.addFlashAttribute("message", "Address added");
+        if(checkout!=null){
+            return "redirect:/shop-checkout";
+        }
         return "redirect:/account";
     }
 

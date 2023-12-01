@@ -18,9 +18,31 @@ public class AddressServiceImpl implements AddressService {
         this.addressRepository = addressRepository;
     }
 
+//    @Override
+//    public Address save(AddressDto addressDto, String username) {
+//        Customer customer = customerService.findByUsername(username);
+//
+//        Address address = new Address();
+//        address.setAddressLine1(addressDto.getAddress_line_1());
+//        address.setAddressLine2(addressDto.getAddress_line_2());
+//        address.setCity(addressDto.getCity());
+//        address.setPincode(addressDto.getPincode());
+//        address.setDistrict(addressDto.getDistrict());
+//        address.setState(addressDto.getState());
+//        address.setCountry(addressDto.getCountry());
+//        address.setCustomer(customer);
+//        address.set_default(false);
+//
+//
+//        return addressRepository.save(address);
+//
+//
+//    }
     @Override
     public Address save(AddressDto addressDto, String username) {
         Customer customer = customerService.findByUsername(username);
+
+        // Create a new address
         Address address = new Address();
         address.setAddressLine1(addressDto.getAddress_line_1());
         address.setAddressLine2(addressDto.getAddress_line_2());
@@ -30,11 +52,21 @@ public class AddressServiceImpl implements AddressService {
         address.setState(addressDto.getState());
         address.setCountry(addressDto.getCountry());
         address.setCustomer(customer);
-        address.set_default(false);
+
+        // Set the new address as the default address
+        address.set_default(true);
+
+        // Update existing default address to be non-default if any
+        Address existingDefaultAddress = addressRepository.findDefaultAddressByCustomer(customer);
+        if (existingDefaultAddress != null) {
+            existingDefaultAddress.set_default(false);
+            addressRepository.save(existingDefaultAddress);
+        }
+
+        // Save the new address
         return addressRepository.save(address);
-
-
     }
+
 
     @Override
     public AddressDto findById(long id) {

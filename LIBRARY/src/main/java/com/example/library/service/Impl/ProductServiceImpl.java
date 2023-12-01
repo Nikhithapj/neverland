@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -338,5 +339,17 @@ public class ProductServiceImpl implements ProductService
     @Override
     public List<Object[]> getTotalQuantityPerProduct() {
         return  productRepository.getTotalQuantityPerProduct();
+    }
+
+    @Override
+    public List<Object[]> getProductsStatsBetweenDates(Date startDate, Date endDate) {
+        return productRepository.getProductsStatsForConfirmedOrdersBetweenDates(startDate,endDate);
+
+    }
+
+    @Override
+    public List<Object[]> getProductStats() {
+        return productRepository.getProductStatsForConfirmedOrders();
+
     }
 }

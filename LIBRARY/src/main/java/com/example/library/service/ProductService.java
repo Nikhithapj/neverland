@@ -5,6 +5,7 @@ import com.example.library.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ProductService {
@@ -59,4 +60,17 @@ List<Product>findProductsByCategory(long id);
     List<ProductDto> findByCategory(Long id);
 
     List<Object[]>getTotalQuantityPerProduct();
+
+
+
+    /* for dashboard services */
+
+
+    List<Object[]> getProductsStatsBetweenDates(Date startDate, Date endDate);
+
+    List<Object[]> getProductStats();
+
+
+
+
 }

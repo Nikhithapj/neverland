@@ -81,7 +81,7 @@ public String checkout(Model model, Principal principal, RedirectAttributes redi
         redirectAttributes.addFlashAttribute("customer", customer);
         model.addAttribute("customer",customer);
         model.addAttribute("error","You must fill the information before checkout!");
-        return "add-address";
+        return "checkoutadd-address";
     }else {
         Address address = new Address();
         model.addAttribute("addressEnter", address);
@@ -224,6 +224,7 @@ public String applyCoupon(@RequestParam("couponCode")String couponCode,
          attributes.addFlashAttribute("couponCode",couponCode);
          attributes.addFlashAttribute("couponOff",coupon.getOffPercentage());
 
+
      }else{
          attributes.addFlashAttribute("error","Coupon code invalid");
 
@@ -233,7 +234,7 @@ public String applyCoupon(@RequestParam("couponCode")String couponCode,
 }
 
 
-@RequestMapping(value="/check-out/apply-coupon",method=RequestMethod.POST,params = "action=remove")
+@RequestMapping(value="/check-out/remove-coupon",method=RequestMethod.POST,params = "action=remove")
 
 public String  removeCoupon(Principal principal,RedirectAttributes attributes,HttpSession session){
         Double totalPrice=(Double)session.getAttribute("totalPrice");

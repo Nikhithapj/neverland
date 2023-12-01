@@ -16,9 +16,9 @@
      <name>NEVERLANDS</name>
     <description>NEVERLANDS</description>
     <modules>
-        <module>Library</module>
-        <module>Admin</module>
-        <module>Customer</module>
+        <module>LIBRARY</module>
+        <module>ADMIN</module>
+        <module>CUSTOMER</module>
         <!--		<module>Customer</module>-->
     </modules>
     <properties>

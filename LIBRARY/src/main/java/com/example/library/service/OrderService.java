@@ -22,4 +22,10 @@ public interface OrderService {
     Order save(ShoppingCart cart, long address_Id, String paymentMethod,Double oldTotalPrice);
 
     void updatePayment(Order order,boolean status);
+
+
+    /* for dashboard */
+
+//    Double getTotalOrderAmount();
+
 }
