@@ -1,6 +1,5 @@
 package com.example.library.service.Impl;
 
-import com.example.library.customerConfig.TwilioConfig;
 import com.example.library.service.SmsService;
 import com.twilio.Twilio;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,6 @@ import java.util.Random;
 @Service
 public class SmsServiceImpl implements SmsService {
 
-//    private TwilioConfig twilioConfig;
-//
-//    public SmsServiceImpl(TwilioConfig twilioConfig) {
-//        this.twilioConfig = twilioConfig;
-//    }
     @Override
     public String generateOtp() {
         return new DecimalFormat("000000")
@@ -46,6 +40,7 @@ public class SmsServiceImpl implements SmsService {
     @Override
     public void sendOtp(String otp) {
         try {
+
             String phoneNumber="+14787073420";
             Twilio.init(System.getenv("AccountSID"),System.getenv("AuthToken"));
             PhoneNumber to = new PhoneNumber("+918921164620");//to
